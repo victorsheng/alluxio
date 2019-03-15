@@ -154,13 +154,13 @@ public class WorkerServiceHandler implements WorkerService.Iface {
     if (!srcFile.exists()) {
       throw new FileDoesNotExistException("File " + srcFile + " does not exist.");
     }
-    if (!srcFile.renameTo(dstFile)) {
+    if (!srcFile.renameTo(dstFile)) {//重命名:类似mv? 为啥不是cp??
       throw new FileDoesNotExistException("Failed to rename file from " + srcFile.getPath() +
           " to " + dstFile.getPath());
     }
-    addId(fileId, fileSizeBytes);
+    addId(fileId, fileSizeBytes);//维护内部计数器
     mUsers.addOwnBytes(userId, - fileSizeBytes);
-    mMasterClient.worker_cachedFile(mWorkerInfo.getId(), 
+    mMasterClient.worker_cachedFile(mWorkerInfo.getId(),//向master发送记录
         mWorkerInfo.getUsedBytes(), fileId, fileSizeBytes);
   }
 

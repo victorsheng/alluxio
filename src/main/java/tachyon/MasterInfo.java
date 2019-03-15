@@ -62,7 +62,7 @@ public class MasterInfo {
   // Root Inode's id must be 1.
   private InodeFolder mRoot;
 
-  private Map<Integer, Inode> mInodes = new HashMap<Integer, Inode>();
+  private Map<Integer, Inode> mInodes = new HashMap<Integer, Inode>();//file id,Inode
 
   private Map<Long, WorkerInfo> mWorkers = new HashMap<Long, WorkerInfo>();
   private Map<InetSocketAddress, Long> mWorkerAddressToId = new HashMap<InetSocketAddress, Long>();
@@ -292,6 +292,7 @@ public class MasterInfo {
         tFile.setLength(fileSizeBytes);
         needLog = true;
       }
+      //日志
       if (needLog) {
         mMasterLogWriter.append(tFile, true);
       }
