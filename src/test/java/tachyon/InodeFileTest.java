@@ -43,6 +43,7 @@ public class InodeFileTest {
     Assert.assertTrue(inodeFile.isReady());
   }
 
+  //InodeFile中 成员变量mLocations 是用来存储workerid和wroker地址的映射关系的节点
   @Test
   public void inMemoryLocationsTest() throws IOException {
     InodeFile inodeFile = new InodeFile("testFile1", 1, 0);
@@ -88,6 +89,7 @@ public class InodeFileTest {
     Assert.assertEquals("/testPath", inodeFile.getCheckpointPath());
   }
 
+  //当locations不在内存时,可以从checkpoint 加载
   @Test
   public void notInMemoryLocationsTest() throws IOException {
     InodeFile inodeFile = new InodeFile("testFile1", 1, 0);

@@ -45,6 +45,7 @@ public class MasterLogReader {
     Object second = null;
 
     try {
+      ////先读类型,再读实例信息
       first = (LogType) mKryo.readClassAndObject(mInput);
       switch (first) {
         case CheckpointInfo:

@@ -37,6 +37,7 @@ public class MasterLogWriter {
   public synchronized void append(Inode inode, boolean flush) {
     LOG.debug("Append and Flush " + inode);
     if (inode.isFile()) {
+      //先写类型,再写实例信息
       mKryo.writeClassAndObject(mOutput, LogType.InodeFile);
       mKryo.writeClassAndObject(mOutput, (InodeFile) inode);
     } else if (!((InodeFolder) inode).isRawTable()) {

@@ -43,6 +43,7 @@ public class DataServerTest {
     int fileId = TestUtils.createSimpleByteFile(mClient, "/testFile", OpType.WRITE_CACHE, 10);
     DataServerMessage sendMsg; 
     sendMsg = DataServerMessage.createFileRequestMessage(fileId);
+    //通过SocketChannel直连server,跳过客户端
     SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress(
         mClient.getFileNetAddresses(fileId).get(0).mHost,
         mClient.getFileNetAddresses(fileId).get(0).mPort + 1));

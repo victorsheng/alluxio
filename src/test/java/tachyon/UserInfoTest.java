@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit tests for tachyon.UserInfo
+ * Unit tests for tachyon.UserInfo 这个也用测试神奇,神奇!
  */
 public class UserInfoTest {
   @Test

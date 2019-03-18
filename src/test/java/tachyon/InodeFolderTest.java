@@ -21,6 +21,7 @@ public class InodeFolderTest {
 
   @Test
   public void sameIdChildrenTest() {
+    //会进行去重复
     InodeFolder inodeFolder = new InodeFolder("testFolder1", 1, 0);
     inodeFolder.addChild(2);
     inodeFolder.addChild(2);
@@ -48,6 +49,7 @@ public class InodeFolderTest {
 
   @Test
   public void batchRemoveChildTest() {
+    //批量删除
     InodeFolder inodeFolder = new InodeFolder("testFolder1", 1, 0);
     InodeFile inodeFile1 = new InodeFile("testFile1", 2, 1);
     InodeFile inodeFile2 = new InodeFile("testFile2", 3, 1);
@@ -65,6 +67,7 @@ public class InodeFolderTest {
 
   @Test
   public void isRawTableTest() {
+    //测试其他类型
     InodeFolder inodeFolder = new InodeFolder("testFolder1", 1, 0);
     InodeFolder inodeRawTable = new InodeFolder("testRawTable1", 2, 0, InodeType.RawTable);
     Assert.assertFalse(inodeFolder.isRawTable());

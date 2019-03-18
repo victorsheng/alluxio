@@ -73,6 +73,7 @@ public class InodeFile extends Inode {
     List<NetAddress> ret = new ArrayList<NetAddress>(mLocations.size());
     ret.addAll(mLocations.values());
     if (ret.isEmpty() && hasCheckpointed()) {
+      //如果没有可以读取checkPoint内存储的路径,作为workerList信息
       UnderFileSystem ufs = UnderFileSystem.getUnderFileSystem(mCheckpointPath);
       List<String> locs = ufs.getFileLocations(mCheckpointPath);
       for (String loc: locs) {

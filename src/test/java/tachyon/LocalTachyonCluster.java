@@ -13,6 +13,7 @@ import tachyon.conf.WorkerConf;
 
 /**
  * Local Tachyon cluster for unit tests.
+ * 本地测试服务端
  */
 public class LocalTachyonCluster {
   private Master mMaster = null;
@@ -102,6 +103,7 @@ public class LocalTachyonCluster {
     mkdir(CommonConf.get().DATA_FOLDER);
     mkdir(CommonConf.get().WORKERS_FOLDER);
 
+    //master
     mMaster = Master.createMaster(
         new InetSocketAddress(mLocalhostName, mMasterPort), mMasterPort + 1, 1, 1, 1);
 
@@ -115,6 +117,7 @@ public class LocalTachyonCluster {
 
     CommonUtils.sleepMs(null, 10);
 
+    //worker
     mWorker = Worker.createWorker(
         new InetSocketAddress(mLocalhostName, mMasterPort), 
         new InetSocketAddress(mLocalhostName, mWorkerPort),

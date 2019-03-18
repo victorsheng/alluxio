@@ -52,6 +52,7 @@ public class InodeRawTableTest {
 
   @Test
   public void equalsTest() {
+    //是根据id比较的
     InodeRawTable inode1 = new InodeRawTable("test1", 1, 0, 10, (ByteBuffer) null);
     InodeRawTable inode2 = new InodeRawTable("test2", 1, 0, 10, (ByteBuffer) null);
     InodeRawTable inode3 = new InodeRawTable("test3", 2, 0, 10, (ByteBuffer) null);
@@ -61,12 +62,14 @@ public class InodeRawTableTest {
 
   @Test
   public void isDirectoryTest() {
+    //InodeRawTable是一种目录
     InodeRawTable inode1 = new InodeRawTable("test1", 1, 0, 10, (ByteBuffer) null);
     Assert.assertTrue(inode1.isDirectory());
   }
 
   @Test
   public void isFileTest() {
+    //InodeRawTable不是文件
     InodeRawTable inode1 = new InodeRawTable("test1", 1, 0, 10, (ByteBuffer) null);
     Assert.assertFalse(inode1.isFile());
   }
@@ -85,6 +88,7 @@ public class InodeRawTableTest {
 
   @Test
   public void reverseIdTest() {
+    //id取反 (负数)
     InodeRawTable inode1 = new InodeRawTable("test1", 1, 0, 10, (ByteBuffer) null);
     inode1.reverseId();
     Assert.assertEquals(-1, inode1.getId());

@@ -44,14 +44,17 @@ public class MasterLogWriterTest {
     mMasterLogWriter.append(inode3, true);
     mMasterLogReader = new MasterLogReader(mLogFile);
     Assert.assertTrue(mMasterLogReader.hasNext());
+    //inode1
     Pair<LogType, Object> toCheck = mMasterLogReader.getNextPair();
     Assert.assertEquals(LogType.InodeFile, toCheck.getFirst());
     Assert.assertEquals(inode, toCheck.getSecond());
     Assert.assertTrue(mMasterLogReader.hasNext());
+    //inode2
     toCheck = mMasterLogReader.getNextPair();
     Assert.assertEquals(LogType.InodeFolder, toCheck.getFirst());
     Assert.assertEquals(inode2, toCheck.getSecond());
     Assert.assertTrue(mMasterLogReader.hasNext());
+    //inode3
     toCheck = mMasterLogReader.getNextPair();
     Assert.assertEquals(LogType.InodeRawTable, toCheck.getFirst());
     Assert.assertEquals(inode3, toCheck.getSecond());
@@ -67,6 +70,7 @@ public class MasterLogWriterTest {
     inodeList.add(inode);
     inodeList.add(inode2);
     inodeList.add(inode3);
+    //apend不再是单个对象,而是list
     mMasterLogWriter.append(inodeList, true);
     mMasterLogReader = new MasterLogReader(mLogFile);
     Assert.assertTrue(mMasterLogReader.hasNext());

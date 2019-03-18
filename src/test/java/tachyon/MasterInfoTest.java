@@ -40,6 +40,7 @@ public class MasterInfoTest {
   public void addCheckpointTest() 
       throws FileDoesNotExistException, SuspectedFileSizeException, FileAlreadyExistException, 
       InvalidPathException {
+    //Checkpoint干啥的?? 类似保存了某些信息
     int fileId = mMasterInfo.createFile("/testFile", false);
     ClientFileInfo fileInfo = mMasterInfo.getFileInfo("/testFile");
     Assert.assertEquals("", fileInfo.getCheckpointPath());
