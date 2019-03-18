@@ -19,11 +19,12 @@ import tachyon.thrift.NetAddress;
 
 /**
  * BlockInStream for remote block.
+ * 直接使用nio进行操作
  */
 public class RemoteBlockInStream extends BlockInStream {
   private static final int BUFFER_SIZE = UserConf.get().REMOTE_READ_BUFFER_SIZE_BYTE;
   private final Logger LOG = Logger.getLogger(Constants.LOGGER_TYPE);
-
+  //block信息
   private ClientBlockInfo mBlockInfo;
   private InputStream mCheckpointInputStream = null;
   private long mReadByte;
@@ -32,10 +33,10 @@ public class RemoteBlockInStream extends BlockInStream {
 
   private boolean mRecache = true;
   private BlockOutStream mBlockOutStream = null;
-
+  //init
   RemoteBlockInStream(TachyonFile file, ReadType readType, int blockIndex) throws IOException {
     super(file, readType, blockIndex);
-
+    //调用thrif服务获取block信息
     mBlockInfo = TFS.getClientBlockInfo(FILE.FID, BLOCK_INDEX);
     mReadByte = 0;
     mBufferStartPosition = 0;
