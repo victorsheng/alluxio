@@ -30,7 +30,8 @@ import tachyon.thrift.WorkerService;
  * <code>WorkerServiceHandler</code> handles all the RPC call to the worker.
  */
 public class WorkerServiceHandler implements WorkerService.Iface {
-  public final BlockingQueue<Integer> sDataAccessQueue = 
+  //数据访问记录的阻塞队列.内容fileid
+  public final BlockingQueue<Integer> sDataAccessQueue =
       new ArrayBlockingQueue<Integer>(Constants.WORKER_FILES_QUEUE_SIZE);
 
   private final Logger LOG = Logger.getLogger(Constants.LOGGER_TYPE);
@@ -42,21 +43,28 @@ public class WorkerServiceHandler implements WorkerService.Iface {
   private WorkerInfo mWorkerInfo;
 
   // TODO Should merge these three structures, and make it more clean. Define NodeStroage class.
+  //在内存的fileid
   private Set<Integer> mMemoryData = new HashSet<Integer>();
+  //fileid,时间戳
   private Map<Integer, Long> mLatestFileAccessTimeMs = new HashMap<Integer, Long>();
+  //fileid, userId
   private Map<Integer, Set<Long>> mUsersPerLockedFile = new HashMap<Integer, Set<Long>>();
+  //key使用户id,value是fileid的集合
   private Map<Long, Set<Integer>> mLockedFilesPerUser = new HashMap<Long, Set<Integer>>();
+  //fileid,文件大小
   private Map<Integer, Long> mFileSizes = new HashMap<Integer, Long>();
-  private BlockingQueue<Integer> mRemovedFileList = 
+  //也算是一种标记删除吧,在心跳时,才向work发送删除
+  private BlockingQueue<Integer> mRemovedFileList =
       new ArrayBlockingQueue<Integer>(Constants.WORKER_FILES_QUEUE_SIZE);
-  private BlockingQueue<Integer> mAddedFileList = 
+  //只有添加,没有处理的逻辑,奇怪
+  private BlockingQueue<Integer> mAddedFileList =
       new ArrayBlockingQueue<Integer>(Constants.WORKER_FILES_QUEUE_SIZE);
 
   private File mDataFolder;
   private File mUserFolder;
   private String mUnderfsWorkerFolder;
   private UnderFileSystem mUnderFs;
-
+  //worker用户信息管理
   private Users mUsers;
 
   public WorkerServiceHandler(InetSocketAddress masterAddress, InetSocketAddress workerAddress,
@@ -239,7 +247,7 @@ public class WorkerServiceHandler implements WorkerService.Iface {
     LOG.info("Initializing the worker info.");
     if (!mDataFolder.exists()) {
       LOG.info("Local folder " + mDataFolder.toString() + " does not exist. Creating a new one.");
-
+      //创建数据文件夹,和用户文件夹
       mDataFolder.mkdir();
       mUserFolder.mkdir();
 
@@ -257,8 +265,9 @@ public class WorkerServiceHandler implements WorkerService.Iface {
       if (tFile.isFile()) {
         cnt ++;
         LOG.info("File " + cnt + ": " + tFile.getPath() + " with size " + tFile.length() + " Bs.");
-
+        //获取文件id,string->integer
         int fileId = CommonUtils.getFileIdFromFileName(tFile.getName());
+        //申请空间
         boolean success = mWorkerInfo.requestSpaceBytes(tFile.length());
         addFoundPartition(fileId, tFile.length());
         mAddedFileList.add(fileId);
@@ -293,6 +302,7 @@ public class WorkerServiceHandler implements WorkerService.Iface {
     }
   }
 
+  //lru驱逐策略,true代表删除成功,false代表删除失败
   private boolean memoryEvictionLRU() {
     long latestTimeMs = Long.MAX_VALUE;
     int fileId = -1;
@@ -309,13 +319,16 @@ public class WorkerServiceHandler implements WorkerService.Iface {
     synchronized (mLatestFileAccessTimeMs) {
       synchronized (mUsersPerLockedFile) {
         for (Entry<Integer, Long> entry : mLatestFileAccessTimeMs.entrySet()) {
+          //找出时间戳最小的,并且不再pinList中的
           if (entry.getValue() < latestTimeMs && !pinList.contains(entry.getKey())) {
+            //并且不在mUsersPerLockedFile
             if(!mUsersPerLockedFile.containsKey(entry.getKey())) {
               fileId = entry.getKey();
               latestTimeMs = entry.getValue();
             }
           }
         }
+        //找到后删除
         if (fileId != -1) {
           freeFile(fileId);
           return true;
@@ -367,7 +380,7 @@ public class WorkerServiceHandler implements WorkerService.Iface {
           " the machine.");
       return false;
     }
-
+    //只有当请求的空间>实际空间,才会退出循环,否则会一直尝试下去(return true的情况下)
     while (!mWorkerInfo.requestSpaceBytes(requestBytes)) {
       if (!memoryEvictionLRU()) {
         return false;
