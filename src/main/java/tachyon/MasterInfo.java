@@ -183,7 +183,7 @@ public class MasterInfo {
 
   public MasterInfo(InetSocketAddress address) throws IOException {
     MASTER_CONF = MasterConf.get();
-
+    //创建根节点
     mRoot = new InodeFolder("", mInodeCounter.incrementAndGet(), -1);
     mInodes.put(mRoot.getId(), mRoot);
 
@@ -895,7 +895,7 @@ public class MasterInfo {
 
     return ret;
   }
-
+  //从文件中恢复
   private void recoveryFromFile(String fileName, String msg) throws IOException {
     MasterLogReader reader;
 

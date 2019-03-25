@@ -33,6 +33,7 @@ import tachyon.thrift.TableColumnException;
 import tachyon.thrift.TableDoesNotExistException;
 
 /**
+ * 1个master client 和多个worker client
  * Tachyon's user client API. It contains a MasterClient and several WorkerClients
  * depending on how many workers the client program is interacting with.
  */
